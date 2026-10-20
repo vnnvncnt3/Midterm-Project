@@ -1,0 +1,95 @@
+@page "/our-story"
+
+<PageTitle>Our Story | Vestige</PageTitle>
+
+<PageHeader Image="story.jpg" Alt="A guide leading a tour through an old street" Eyebrow="Our Story" Title="We started with a single walk." Lead="Placeholder narrative: replace with the company's real history." />
+
+@* OPENING STATEMENT *@
+<section class="bg-orange-50 py-24 lg:py-36">
+    <div class="mx-auto max-w-5xl px-6 text-center lg:px-10" data-reveal>
+        <span class="eyebrow">Where it began</span>
+        <p class="mt-8 font-display text-4xl font-light leading-snug sm:text-6xl">Every old street keeps a story. We exist to help visitors hear it.</p>
+    </div>
+</section>
+
+@* NARRATIVE *@
+<section class="bg-stone-50 pb-24 lg:pb-36">
+    <div class="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-12 lg:px-10">
+        <div class="relative lg:col-span-5" data-reveal>
+            <Photo Src="story-2.jpg" Alt="Guests listening to a story" Class="relative aspect-[4/5] overflow-hidden bg-orange-950" />
+            <div class="absolute -bottom-5 -right-5 -z-10 hidden h-full w-full border border-amber-800/40 lg:block"></div>
+        </div>
+        <div class="space-y-6 text-lg leading-relaxed text-slate-900/80 lg:col-span-6 lg:col-start-7" data-reveal style="--d:150ms">
+            <p>Vestige began as a small group of locals who wanted to share the history of their city with people who would otherwise walk past it.</p>
+            <p>Today we guide visitors through the lanes, landmarks and kitchens that make the old town what it is. We keep our tours small, our routes walkable and our storytelling grounded in what we can verify.</p>
+            <p>Guests should leave knowing more than when they arrived, and a little more curious about the place they are standing in.</p>
+        </div>
+    </div>
+</section>
+
+@* CHAPTERS *@
+<section class="bg-slate-900 py-24 text-orange-50 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-10">
+        <div class="mb-16 max-w-2xl" data-reveal>
+            <span class="eyebrow !text-amber-500">Our Journey</span>
+            <h2 class="mt-4 font-display text-4xl font-light sm:text-6xl">Three chapters so far.</h2>
+        </div>
+        <ol class="relative space-y-12 border-l border-orange-50/20 pl-8 sm:pl-12">
+            @for (var i = 0; i < _chapters.Length; i++)
+            {
+                <li class="relative" data-reveal style="@($"--d:{i * 100}ms")">
+                    <span class="absolute -left-[2.55rem] top-2 h-3 w-3 rounded-full bg-amber-500 sm:-left-[3.55rem]"></span>
+                    <p class="text-xs font-semibold uppercase tracking-wider2 text-amber-500">Chapter @(i + 1)</p>
+                    <h3 class="mt-2 font-display text-3xl sm:text-4xl">@_chapters[i].Title</h3>
+                    <p class="mt-3 max-w-2xl leading-relaxed text-orange-50/65">@_chapters[i].Text</p>
+                </li>
+            }
+        </ol>
+    </div>
+</section>
+
+@* VALUES *@
+<section class="bg-orange-50 py-24 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-10">
+        <div class="mb-14 max-w-2xl" data-reveal>
+            <span class="eyebrow">What We Stand For</span>
+            <h2 class="mt-4 font-display text-4xl font-light sm:text-6xl">Three promises.</h2>
+        </div>
+        <div class="grid gap-px overflow-hidden border border-slate-900/10 bg-slate-900/10 md:grid-cols-3">
+            @for (var i = 0; i < _values.Length; i++)
+            {
+                <div class="group bg-orange-50 p-10 transition-colors duration-500 hover:bg-amber-800" data-reveal style="@($"--d:{i * 100}ms")">
+                    <span class="font-display text-6xl font-light text-amber-800 transition-colors duration-500 group-hover:text-orange-200">0@(i + 1)</span>
+                    <h3 class="mt-5 font-display text-3xl font-medium transition-colors duration-500 group-hover:text-orange-50">@_values[i].Title</h3>
+                    <p class="mt-3 leading-relaxed text-slate-900/70 transition-colors duration-500 group-hover:text-orange-50/80">@_values[i].Text</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="bg-amber-800 py-24 text-center text-orange-50">
+    <div class="mx-auto max-w-2xl px-6" data-reveal>
+        <h2 class="font-display text-5xl font-light">Ready to walk with us?</h2>
+        <a href="/#tours" class="btn-light mt-10">See the Tours</a>
+    </div>
+</section>
+
+@code {
+    private record Item(string Title, string Text);
+
+    // Sample copy: replace with the real history and values.
+    private readonly Item[] _chapters =
+    {
+        new("A few friends and a map", "The first walks were free, informal and always ran late because someone had another story to tell."),
+        new("Finding our routes", "We learned which streets reward slow walking, and which stories deserve a chair and a cold drink."),
+        new("Opening the door wider", "Today the tours are organised, small and open to anyone curious about the old city."),
+    };
+
+    private readonly Item[] _values =
+    {
+        new("Respect the place", "We tread lightly, support neighbourhood businesses and honour the communities who live here."),
+        new("Tell it accurately", "Stories are researched and sourced. When history is uncertain, we say so."),
+        new("Welcome everyone", "Routes and pacing are designed so more people can join in."),
+    };
+}

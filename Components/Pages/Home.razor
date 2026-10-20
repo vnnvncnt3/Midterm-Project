@@ -1,0 +1,180 @@
+@page "/"
+@inject ReviewService ReviewStore
+
+<PageTitle>Vestige | Heritage Walking Tours</PageTitle>
+
+@* HERO *@
+<Photo Src="hero.jpg" Alt="An old street at golden hour" Zoom="true" Class="relative flex min-h-[100svh] items-end overflow-hidden bg-orange-950">
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-orange-950/25 to-slate-900/90"></div>
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-6 pb-14 pt-40 lg:px-10 lg:pb-20">
+        <div class="mb-6 flex items-center gap-3" data-reveal>
+            <span class="h-px w-12 bg-orange-300"></span>
+            <span class="text-xs font-semibold uppercase tracking-wider2 text-orange-100/90">Heritage walking tours</span>
+        </div>
+        <h1 class="max-w-5xl font-display text-[4.2rem] font-light leading-[0.92] text-orange-50 sm:text-8xl lg:text-9xl" data-reveal style="--d:100ms">Walk the city the way it was built.</h1>
+        <p class="mt-8 max-w-xl font-display text-xl font-light italic leading-relaxed text-orange-100/90 sm:text-2xl" data-reveal style="--d:220ms">Guided routes through old streets, landmarks and the stories behind them.</p>
+        <div class="mt-10 flex flex-col items-start gap-4 sm:flex-row" data-reveal style="--d:340ms">
+            <a href="#tours" class="btn-light">Explore the Tours</a>
+            <a href="our-story" class="btn-outline">Our Story</a>
+        </div>
+        <div class="mt-14 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-orange-50/20 pt-5 text-xs uppercase tracking-wider2 text-orange-100/70" data-reveal style="--d:460ms">
+            <span>Local guides</span><span class="text-orange-300">•</span><span>Small groups</span><span class="text-orange-300">•</span><span>Walkable routes</span>
+        </div>
+    </div>
+</Photo>
+
+@* INTRO *@
+<section class="bg-orange-50 py-24 lg:py-36">
+    <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-12 lg:px-10">
+        <div class="lg:col-span-6" data-reveal>
+            <span class="eyebrow">Why Vestige</span>
+            <h2 class="mt-5 font-display text-4xl font-light leading-tight sm:text-6xl">Every old street keeps a story. We help you hear it.</h2>
+        </div>
+        <div class="space-y-6 text-lg leading-relaxed text-slate-900/75 lg:col-span-5 lg:col-start-8" data-reveal style="--d:150ms">
+            <p>We walk, we pause, and we talk about what you are standing in front of: who built it, who lived there, what changed. No scripts, no rush.</p>
+            <a href="our-story" class="inline-block border-b border-amber-800 pb-1 text-xs font-semibold uppercase tracking-wider2 text-amber-800 transition-colors hover:text-orange-900">Read our story</a>
+        </div>
+    </div>
+</section>
+
+@* TOURS *@
+<section id="tours" class="bg-stone-50 py-24 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-10">
+        <div class="mb-20 max-w-2xl" data-reveal>
+            <span class="eyebrow">Our Tours</span>
+            <h2 class="mt-4 font-display text-4xl font-light sm:text-6xl">Three ways into the old city.</h2>
+        </div>
+        <div class="space-y-24 lg:space-y-32">
+            @for (var i = 0; i < _tours.Length; i++)
+            {
+                var t = _tours[i];
+                var flip = i % 2 == 1;
+                <article class="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+                    <div class="@(flip ? "lg:order-2 lg:col-span-7" : "lg:col-span-7")" data-reveal>
+                        <Photo Src="@t.Image" Alt="@t.Name" Class="group relative aspect-[4/3] overflow-hidden bg-orange-950">
+                            <div class="absolute inset-0 bg-slate-900/0 transition-colors duration-700 group-hover:bg-slate-900/20"></div>
+                        </Photo>
+                    </div>
+                    <div class="@(flip ? "lg:order-1 lg:col-span-5" : "lg:col-span-5")" data-reveal style="--d:150ms">
+                        <span class="font-display text-7xl font-light text-amber-800/30">0@(i + 1)</span>
+                        <p class="eyebrow mt-2">@t.Tag</p>
+                        <h3 class="mt-3 font-display text-4xl font-medium sm:text-5xl">@t.Name</h3>
+                        <p class="mt-5 text-lg leading-relaxed text-slate-900/70">@t.Blurb</p>
+                        <ul class="mt-6 space-y-2 text-sm text-slate-900/80">
+                            @foreach (var item in t.Includes)
+                            {
+                                <li class="flex items-center gap-3"><span class="h-px w-6 bg-amber-800"></span>@item</li>
+                            }
+                        </ul>
+                        <a href="reviews" class="mt-8 inline-block border-b border-amber-800 pb-1 text-xs font-semibold uppercase tracking-wider2 text-amber-800 transition-colors hover:text-orange-900">Read guest reviews</a>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+@* MOSAIC *@
+<section class="bg-slate-900 py-24 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-10">
+        <div class="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between" data-reveal>
+            <div>
+                <span class="eyebrow !text-amber-500">Along the Way</span>
+                <h2 class="mt-4 font-display text-4xl font-light text-orange-50 sm:text-6xl">Moments from the route.</h2>
+            </div>
+            <p class="max-w-sm text-sm leading-relaxed text-orange-50/50">A glimpse of what you will pass, taste and hear on a Vestige walk.</p>
+        </div>
+        <div class="grid auto-rows-[220px] grid-cols-1 gap-4 sm:grid-cols-2 md:auto-rows-[260px] md:grid-cols-3">
+            @foreach (var (src, caption, span, i) in _moments.Select((m, i) => (m.Src, m.Caption, m.Span, i)))
+            {
+                <div class="@span" data-reveal style="@($"--d:{i * 90}ms")">
+                    <Photo Src="@src" Alt="@caption" Class="group relative h-full overflow-hidden bg-orange-950">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                        <span class="absolute bottom-4 left-4 translate-y-2 text-xs uppercase tracking-wider2 text-orange-50 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">@caption</span>
+                    </Photo>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@* HOW IT WORKS *@
+<section class="bg-orange-50 py-24 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-10">
+        <div class="mx-auto mb-16 max-w-2xl text-center" data-reveal>
+            <span class="eyebrow">The Experience</span>
+            <h2 class="mt-4 font-display text-4xl font-light sm:text-5xl">How a walk unfolds.</h2>
+        </div>
+        <div class="grid gap-px overflow-hidden border border-slate-900/10 bg-slate-900/10 md:grid-cols-3">
+            @for (var i = 0; i < _steps.Length; i++)
+            {
+                <div class="group bg-orange-50 p-10 transition-colors duration-500 hover:bg-slate-900" data-reveal style="@($"--d:{i * 100}ms")">
+                    <span class="font-display text-5xl font-light text-amber-800 transition-colors duration-500 group-hover:text-amber-500">0@(i + 1)</span>
+                    <h3 class="mt-6 font-display text-3xl transition-colors duration-500 group-hover:text-orange-50">@_steps[i].Title</h3>
+                    <p class="mt-3 leading-relaxed text-slate-900/65 transition-colors duration-500 group-hover:text-orange-50/60">@_steps[i].Text</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@* GUEST VOICES (live from the review page) *@
+<section class="bg-stone-50 py-24 lg:py-32">
+    <div class="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-12 lg:px-10">
+        <div class="lg:col-span-4" data-reveal>
+            <span class="eyebrow">Guest Voices</span>
+            <h2 class="mt-4 font-display text-4xl font-light sm:text-5xl">Rated by the people who walked.</h2>
+            <p class="mt-8 font-display text-7xl font-light text-amber-800">@ReviewStore.Average.ToString("0.0")<span class="text-3xl text-slate-900/40"> / 5</span></p>
+            <StarRating ReadOnly="true" Value="(int)Math.Round(ReviewStore.Average)" />
+            <a href="reviews" class="btn-primary mt-8">All Reviews</a>
+        </div>
+        <ul class="space-y-6 lg:col-span-7 lg:col-start-6">
+            @foreach (var r in ReviewStore.All.Take(2))
+            {
+                <li class="border border-slate-900/10 bg-orange-50 p-8" data-reveal>
+                    <StarRating ReadOnly="true" Value="r.Rating" />
+                    <p class="mt-4 font-display text-2xl font-light leading-snug">@r.Comment</p>
+                    <p class="mt-5 text-sm"><span class="font-semibold">@r.Author</span> <span class="text-slate-900/50">· @r.Tour</span></p>
+                </li>
+            }
+        </ul>
+    </div>
+</section>
+
+@* CTA *@
+<Photo Src="cta.jpg" Alt="Evening in the old town" Class="relative overflow-hidden bg-orange-950">
+    <div class="absolute inset-0 bg-amber-800/80"></div>
+    <div class="relative mx-auto max-w-3xl px-6 py-28 text-center" data-reveal>
+        <h2 class="font-display text-5xl font-light text-orange-50 sm:text-6xl">Walked with us already?</h2>
+        <p class="mt-5 text-lg text-orange-100/90">Rate your tour and leave a comment for future guests.</p>
+        <a href="reviews" class="btn-light mt-10">Write a Review</a>
+    </div>
+</Photo>
+
+@code {
+    private record TourCard(string Name, string Tag, string Blurb, string Image, string[] Includes);
+    private record Step(string Title, string Text);
+
+    // Sample copy: replace with the real tours and captions.
+    private readonly TourCard[] _tours =
+    {
+        new("Old Town Walking Tour", "Streets & Squares", "A gentle loop through the oldest lanes, markets and plazas of the historic centre.", "tour-old-town.jpg", new[] { "Local guide throughout", "Rest stops along the route", "Small group" }),
+        new("Landmarks & Stories", "Architecture", "Churches, forts and civic halls, and the people and events that shaped them.", "tour-landmarks.jpg", new[] { "Entry to featured landmarks", "Story-led commentary", "Photo stops" }),
+        new("Heritage Food Trail", "Culinary", "Taste local dishes at family-run stalls and learn how each recipe came to town.", "tour-food.jpg", new[] { "Tastings at several stops", "Meet the cooks", "Vegetarian options on request" }),
+    };
+
+    private readonly (string Src, string Caption, string Span)[] _moments =
+    {
+        ("moment-1.jpg", "Morning light on the old town", "md:col-span-2"),
+        ("moment-2.jpg", "Details you would walk past", "md:row-span-2"),
+        ("tour-landmarks.jpg", "Stories carved in stone", ""),
+        ("tour-food.jpg", "Recipes with a past", ""),
+    };
+
+    private readonly Step[] _steps =
+    {
+        new("Meet", "Gather with your guide and a small group at an easy-to-find starting point."),
+        new("Walk", "Move at a relaxed pace, stopping where the story is, not where the schedule says."),
+        new("Taste & Talk", "Finish with something local and the chance to ask everything you wondered."),
+    };
+}

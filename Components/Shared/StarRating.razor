@@ -1,0 +1,39 @@
+<div class="inline-flex items-center gap-0.5 @Class"
+     role="@(IsInteractive ? "radiogroup" : "img")"
+     aria-label="@($"{Value} out of {Max} stars")">
+    @for (var i = 1; i <= Max; i++)
+    {
+        var star = i;
+        var colour = star <= Value ? "text-orange-500" : "text-orange-200";
+
+        @if (IsInteractive)
+        {
+            <button type="button"
+                    class="@colour @(Large ? "text-4xl" : "text-2xl") leading-none transition hover:scale-110 hover:text-orange-400"
+                    aria-label="@($"{star} star{(star > 1 ? "s" : "")}")"
+                    @onclick="() => Select(star)">★</button>
+        }
+        else
+        {
+            <span class="@colour @(Large ? "text-3xl" : SizeClass) leading-none" aria-hidden="true">★</span>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public int Value { get; set; }
+    [Parameter] public EventCallback<int> ValueChanged { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Large { get; set; }
+    [Parameter] public int Max { get; set; } = 5;
+    [Parameter] public string SizeClass { get; set; } = "text-lg";
+    [Parameter] public string? Class { get; set; }
+
+    private bool IsInteractive => !ReadOnly && ValueChanged.HasDelegate;
+
+    private async Task Select(int star)
+    {
+        Value = star;
+        await ValueChanged.InvokeAsync(star);
+    }
+}

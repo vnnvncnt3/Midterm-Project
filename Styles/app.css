@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --ease: cubic-bezier(.22, 1, .36, 1); }
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-stone-50 font-body text-slate-900 antialiased; overflow-x: clip; }
+  h1, h2, h3 { @apply font-display; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-amber-800; }
+  html:has(.mobile-menu.is-open) { overflow: hidden; }
+}
+
+@layer components {
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-wider2 text-amber-800; }
+  .btn-primary { @apply inline-block bg-amber-800 px-8 py-3.5 text-xs font-semibold uppercase tracking-wider2 text-orange-50 transition-colors duration-500 hover:bg-orange-900; }
+  .btn-light { @apply inline-block bg-orange-50 px-8 py-3.5 text-xs font-semibold uppercase tracking-wider2 text-slate-900 transition-colors duration-500 hover:bg-amber-800 hover:text-orange-50; }
+  .btn-outline { @apply inline-block border border-orange-50/70 px-8 py-3.5 text-xs font-semibold uppercase tracking-wider2 text-orange-50 transition-colors duration-500 hover:bg-orange-50 hover:text-slate-900; }
+  .field { @apply w-full border-b border-slate-900/30 bg-transparent py-3 text-slate-900 placeholder:text-slate-500 focus:border-amber-800 focus:outline-none; }
+
+  /* Header: transparent over the hero, solid cream after scrolling */
+  .site-header { @apply fixed inset-x-0 top-0 z-50 border-b border-transparent text-orange-50 transition-all duration-500; transition-timing-function: var(--ease); }  html.is-scrolled .site-header { @apply border-slate-900/10 bg-orange-50/95 text-slate-900 backdrop-blur-md; }
+  html .site-header.menu-open { @apply border-transparent bg-transparent text-orange-50 backdrop-blur-none; }
+  .nav-link { @apply border-b-2 border-transparent pb-1 text-xs font-medium uppercase tracking-wider2 opacity-75 transition-opacity duration-300 hover:opacity-100; }
+  .nav-link.is-active { @apply border-current opacity-100; }
+  .btn-header { @apply border border-current px-5 py-2.5 text-xs font-semibold uppercase tracking-wider2 transition-colors duration-500 hover:bg-orange-50 hover:text-slate-900; }
+  html.is-scrolled .btn-header:hover { @apply bg-slate-900 text-orange-50; }
+
+  /* Full-screen mobile menu */
+  .mobile-menu { @apply pointer-events-none fixed inset-0 z-40 bg-slate-900 opacity-0 transition-opacity duration-500 md:hidden; transition-timing-function: var(--ease); }  .mobile-menu.is-open { @apply pointer-events-auto opacity-100; }
+  .mobile-link { @apply block translate-y-4 border-b border-orange-50/10 py-5 font-display text-5xl font-light text-orange-50 opacity-0 transition-all duration-500; transition-timing-function: var(--ease); }  .mobile-menu.is-open .mobile-link { @apply translate-y-0 opacity-100; }
+  .mobile-link.is-active { @apply text-orange-300; }
+
+}
+
+/* Hero zoom + scroll reveal.
+   Kept OUTSIDE @layer on purpose: Tailwind v3 drops layered rules whose classes
+   never appear in the .razor files, and "is-visible" is only added by site.js. */
+.kenburns { animation: kenburns 18s var(--ease) forwards; }
+[data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0ms); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.12) translate(-1.5%, -1.5%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .kenburns { animation: none; }
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}

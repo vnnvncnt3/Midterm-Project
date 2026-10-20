@@ -1,0 +1,117 @@
+@page "/reviews"
+@inject ReviewService ReviewStore
+
+<PageTitle>Reviews | Vestige</PageTitle>
+
+<PageHeader Image="cta.jpg" Alt="Evening in the old town" Eyebrow="Reviews" Title="What our guests say." Lead="Rate your tour and leave a comment." />
+
+<section class="bg-orange-50 py-16 lg:py-24">
+    <div class="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-12 lg:px-10">
+
+        <div class="lg:col-span-5" data-reveal>
+            <div class="bg-slate-900 p-8 text-orange-50 sm:p-10 lg:sticky lg:top-28">
+                <h2 class="font-display text-4xl font-light">Leave a review</h2>
+                <EditForm Model="_draft" OnSubmit="Submit" class="mt-8 space-y-7" FormName="review-form">
+                    <div>
+                        <label for="author" class="text-xs uppercase tracking-wider2 text-orange-50/60">Your name</label>
+                        <InputText id="author" @bind-Value="_draft.Author" class="field !border-orange-50/30 !text-orange-50 placeholder:!text-orange-50/40" placeholder="Full name" />
+                    </div>
+                    <div>
+                        <label for="tour" class="text-xs uppercase tracking-wider2 text-orange-50/60">Tour</label>
+                        <InputSelect id="tour" @bind-Value="_draft.Tour" class="field !border-orange-50/30 !bg-slate-900 !text-orange-50">
+                            <option value="">Select a tour</option>
+                            @foreach (var t in ReviewService.Tours) { <option value="@t">@t</option> }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <span class="text-xs uppercase tracking-wider2 text-orange-50/60">Your rating</span>
+                        <div class="mt-2"><StarRating Large="true" @bind-Value="_draft.Rating" /></div>
+                    </div>
+                    <div>
+                        <label for="comment" class="text-xs uppercase tracking-wider2 text-orange-50/60">Comment</label>
+                        <InputTextArea id="comment" @bind-Value="_draft.Comment" rows="4" maxlength="500" class="field resize-none !border-orange-50/30 !text-orange-50 placeholder:!text-orange-50/40" placeholder="Tell us about your walk" />
+                        <p class="mt-1 text-right text-xs text-orange-50/50">@_draft.Comment.Length / 500</p>
+                    </div>
+
+                    @if (_errors.Count > 0)
+                    {
+                        <ul class="space-y-1 text-sm text-orange-300" role="alert">
+                            @foreach (var e in _errors) { <li>• @e</li> }
+                        </ul>
+                    }
+                    @if (_submitted)
+                    {
+                        <p class="text-sm text-amber-400" role="status">Thank you! Your review has been added.</p>
+                    }
+
+                    <button type="submit" class="btn-light w-full">Submit Review</button>
+                </EditForm>
+            </div>
+        </div>
+
+        <div class="lg:col-span-7">
+            <div class="mb-10 grid gap-8 border-b border-slate-900/15 pb-10 sm:grid-cols-2" data-reveal>
+                <div>
+                    <span class="eyebrow">Overall rating</span>
+                    <p class="mt-2 font-display text-7xl font-light">@ReviewStore.Average.ToString("0.0")<span class="text-3xl text-slate-900/40"> / 5</span></p>
+                    <StarRating ReadOnly="true" Value="(int)Math.Round(ReviewStore.Average)" />
+                    <p class="mt-2 text-sm text-slate-900/60">@ReviewStore.All.Count review@(ReviewStore.All.Count == 1 ? "" : "s")</p>
+                </div>
+                <div class="space-y-2 self-center">
+                    @for (var star = 5; star >= 1; star--)
+                    {
+                        var count = ReviewStore.Distribution[star];
+                        var pct = ReviewStore.All.Count == 0 ? 0 : count * 100 / ReviewStore.All.Count;
+                        <div class="flex items-center gap-3 text-xs text-slate-900/70">
+                            <span class="w-4">@star</span>
+                            <div class="h-1.5 flex-1 bg-slate-900/10"><div class="h-full bg-amber-800 transition-all duration-700 ease-lux" style="@($"width:{pct}%")"></div></div>
+                            <span class="w-6 text-right">@count</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (ReviewStore.All.Count == 0)
+            {
+                <p class="py-12 text-center text-slate-900/60">No reviews yet. Be the first to share your walk.</p>
+            }
+            else
+            {
+                <ul class="space-y-6">
+                    @foreach (var r in ReviewStore.All)
+                    {
+                        <li class="border border-slate-900/10 bg-stone-50 p-7 transition-shadow duration-500 hover:shadow-lg" data-reveal>
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <StarRating ReadOnly="true" Value="r.Rating" />
+                                <time class="text-xs uppercase tracking-wider2 text-slate-900/50">@r.CreatedAt.ToString("MMM d, yyyy")</time>
+                            </div>
+                            <p class="mt-4 font-display text-2xl font-light leading-snug">@r.Comment</p>
+                            <p class="mt-5 text-sm"><span class="font-semibold">@r.Author</span> <span class="text-slate-900/50">· @r.Tour</span></p>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</section>
+
+@code {
+    private Review _draft = new();
+    private readonly List<string> _errors = new();
+    private bool _submitted;
+
+    private void Submit()
+    {
+        _errors.Clear();
+        _submitted = false;
+        if (string.IsNullOrWhiteSpace(_draft.Author)) _errors.Add("Please enter your name.");
+        if (string.IsNullOrWhiteSpace(_draft.Tour)) _errors.Add("Please choose a tour.");
+        if (_draft.Rating == 0) _errors.Add("Please select a star rating.");
+        if (string.IsNullOrWhiteSpace(_draft.Comment)) _errors.Add("Please write a comment.");
+        if (_errors.Count > 0) return;
+
+        ReviewStore.Add(new Review { Author = _draft.Author.Trim(), Tour = _draft.Tour, Rating = _draft.Rating, Comment = _draft.Comment.Trim() });
+        _draft = new();
+        _submitted = true;
+    }
+}

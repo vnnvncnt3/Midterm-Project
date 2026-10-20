@@ -1,0 +1,75 @@
+@inherits LayoutComponentBase
+
+<header class="site-header @(_open ? "menu-open" : "")">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
+        <a href="/" class="font-display text-3xl font-medium tracking-wide" @onclick="Close">Vestige</a>
+
+        <nav class="hidden items-center gap-10 md:flex" aria-label="Main">
+            @foreach (var (label, href) in _links)
+            {
+                <NavLink href="@href" Match="@MatchFor(href)" class="nav-link" ActiveClass="is-active">@label</NavLink>
+            }
+        </nav>
+
+        <div class="flex items-center gap-3">
+            <a href="reviews" class="btn-header hidden sm:inline-block">Write a Review</a>
+            <button type="button" class="flex h-11 w-11 flex-col items-center justify-center gap-1.5 md:hidden"
+                    aria-label="@(_open ? "Close menu" : "Open menu")" aria-expanded="@_open" @onclick="Toggle">
+                <span class="block h-0.5 w-6 bg-current transition-transform duration-500 ease-lux @(_open ? "translate-y-2 rotate-45" : "")"></span>
+                <span class="block h-0.5 w-6 bg-current transition-opacity duration-300 @(_open ? "opacity-0" : "")"></span>
+                <span class="block h-0.5 w-6 bg-current transition-transform duration-500 ease-lux @(_open ? "-translate-y-2 -rotate-45" : "")"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu @(_open ? "is-open" : "")" aria-hidden="@(!_open)">
+    <nav class="flex h-full flex-col justify-center px-8" aria-label="Mobile">
+        @for (var i = 0; i < _links.Length; i++)
+        {
+            var (label, href) = _links[i];
+            <NavLink href="@href" Match="@MatchFor(href)" class="mobile-link" ActiveClass="is-active"
+                     style="@($"transition-delay:{(_open ? 120 + i * 70 : 0)}ms")" @onclick="Close">@label</NavLink>
+        }
+        <a href="reviews" class="btn-outline mt-10 w-fit" @onclick="Close">Write a Review</a>
+    </nav>
+</div>
+
+<main>@Body</main>
+
+<footer class="bg-slate-900 text-orange-50/70">
+    <div class="mx-auto max-w-7xl px-6 py-20 lg:px-10">
+        <div class="grid gap-14 md:grid-cols-12">
+            <div class="md:col-span-6">
+                <p class="font-display text-6xl font-light text-orange-50 sm:text-7xl">Vestige</p>
+                <p class="mt-4 max-w-sm leading-relaxed">Walking tours through the streets, landmarks and stories of the old city.</p>
+            </div>
+            <div class="text-sm md:col-span-3">
+                <p class="eyebrow !text-amber-500">Explore</p>
+                <ul class="mt-5 space-y-3">
+                    @foreach (var (label, href) in _links)
+                    {
+                        <li><a class="transition-colors hover:text-orange-50" href="@href">@label</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="text-sm md:col-span-3">
+                <p class="eyebrow !text-amber-500">Contact</p>
+                <p class="mt-5 leading-relaxed">hello@vestige.example<br />Placeholder address, Old Town</p>
+            </div>
+        </div>
+        <div class="mt-16 flex flex-col justify-between gap-3 border-t border-orange-50/10 pt-6 text-xs sm:flex-row">
+            <span>© @DateTime.Now.Year Vestige Heritage Walks</span>
+            <span class="uppercase tracking-wider2">Made with care for the old city</span>
+        </div>
+    </div>
+</footer>
+
+@code {
+    private bool _open;
+    private readonly (string Label, string Href)[] _links = { ("Home", ""), ("Our Story", "our-story"), ("Reviews", "reviews") };
+
+    private static NavLinkMatch MatchFor(string href) => href == "" ? NavLinkMatch.All : NavLinkMatch.Prefix;
+    private void Toggle() => _open = !_open;
+    private void Close() => _open = false;
+}

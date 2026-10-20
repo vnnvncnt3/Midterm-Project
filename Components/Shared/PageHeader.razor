@@ -1,0 +1,22 @@
+<Photo Src="@Image" Alt="@Alt" Zoom="true" Class="relative flex min-h-[62svh] items-end overflow-hidden bg-orange-950">
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/85 via-orange-950/40 to-slate-900/50"></div>
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-6 pb-16 pt-40 lg:px-10 lg:pb-24">
+        <div class="mb-6 flex items-center gap-3" data-reveal>
+            <span class="h-px w-12 bg-orange-300"></span>
+            <span class="text-xs font-semibold uppercase tracking-wider2 text-orange-200">@Eyebrow</span>
+        </div>
+        <h1 class="max-w-4xl font-display text-6xl font-light leading-[0.95] text-orange-50 sm:text-7xl lg:text-8xl" data-reveal style="--d:100ms">@Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Lead))
+        {
+            <p class="mt-6 max-w-xl font-display text-xl italic text-orange-100/90 sm:text-2xl" data-reveal style="--d:200ms">@Lead</p>
+        }
+    </div>
+</Photo>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter] public string Eyebrow { get; set; } = "";
+    [Parameter] public string? Lead { get; set; }
+    [Parameter] public string Image { get; set; } = "none.jpg";
+    [Parameter] public string Alt { get; set; } = "";
+}

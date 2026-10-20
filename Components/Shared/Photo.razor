@@ -1,0 +1,16 @@
+@* Photo with a terracotta fallback: if the image file is missing, the gradient shows instead. *@
+<div class="@Class" role="img" aria-label="@Alt">
+    <div class="absolute inset-0 bg-cover bg-center @(Zoom ? "kenburns" : "")" style="@BackgroundStyle"></div>
+    @ChildContent
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Src { get; set; } = "";
+    [Parameter] public string Alt { get; set; } = "";
+    [Parameter] public string Class { get; set; } = "relative overflow-hidden";
+    [Parameter] public bool Zoom { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string BackgroundStyle =>
+        $"background-image: url('images/{Src}'), linear-gradient(135deg, #9a3412 0%, #78350f 55%, #431407 100%);";
+}
